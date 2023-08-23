@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "midjourney-api"
+version = "0.1.0"
+description = "Self-hostable unofficial API for Midjourney Discord bot"
+authors = ["Yuxiang Gao <contact@yuxiang.io>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "app" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.101.1"
+pydantic = { extras = ["dotenv"], version = "^2.2.1" }
+discord-py = "^2.3.2"
+arq = "^0.25.0"
+httpx = "^0.24.1"
+aiofiles = "^23.2.1"
+python-dateutil = "^2.8.2"
+pydantic-settings = "^2.0.3"
+loguru = "^0.7.0"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+black = "^23.7.0"
+isort = "^5.12.0"
+mypy = "^1.5.1"
+types-aiofiles = "^23.2.0.0"
+types-python-dateutil = "^2.8.19.14"
+
+
+[[tool.poetry.source]]
+name = "aliyun"
+url = "http://mirrors.aliyun.com/pypi/simple"
+priority = "default"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
