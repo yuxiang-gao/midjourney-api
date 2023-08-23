@@ -1,4 +1,3 @@
 from importlib import metadata
 
-# __version__ = metadata.version(__package__)
-__version__ = "0.1.0"
+__version__ = metadata.version("midjourney-api")
