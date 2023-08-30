@@ -1,9 +1,12 @@
 import re
+from datetime import datetime
+from enum import Enum
 from typing import Optional
 
 from pydantic import AnyHttpUrl, BaseModel
 
-from app.discord.enums import TriggerType
+from app.discord.enums import TaskType
+from app.settings import settings
 
 
 # extract url and text
@@ -15,6 +18,46 @@ def extract_url(text: str) -> tuple[Optional[str], str]:
     return None, text
 
 
+class TaskId(BaseModel):
+    id: str
+
+    def to_prompt(self) -> str:
+        return f"{settings.prompt_id_prefix}{self.id}{settings.prompt_id_suffix}"
+
+    @classmethod
+    def from_prompt(cls, prompt: str) -> "TaskId":
+        match = re.search(rf"{settings.prompt_id_prefix}(.+?){settings.prompt_id_suffix}", prompt)
+        if match:
+            return cls(id=match.group(1))
+        else:
+            raise ValueError(f"Invalid prompt: {prompt}")
+
+    def __repr__(self):
+        return self.id
+
+    def __str__(self):
+        return self.id
+
+
+class TaskStatus(str, Enum):
+    queued = "queued"
+    waiting = "waiting"
+    running = "running"
+    finished = "finished"
+    failed = "failed"
+    cancelled = "cancelled"
+
+
+class TaskInfo(BaseModel):
+    id: str
+    status: TaskStatus
+    actions: list[str] = []
+    attachments: list[str] = []
+    progress: Optional[float] = None
+    created_at: Optional[datetime] = None
+    finished_at: Optional[datetime] = None
+
+
 class TaskImagine(BaseModel):
     prompt: str
     picurl: Optional[AnyHttpUrl] = None
@@ -23,7 +66,7 @@ class TaskImagine(BaseModel):
         url, prompt = extract_url(self.prompt)
         prompt = prompt.replace("\n", " ").replace("\r", " ").replace("\t", " ").strip()
 
-        return f"{self.picurl or url or ''} <#{unique_id}#> {prompt}"
+        return f"{self.picurl or url or ''} {TaskId(id=unique_id).to_prompt()} {prompt}"
 
 
 class SubTask(BaseModel):
@@ -59,8 +102,8 @@ class QueueRelease(BaseModel):
 class TaskResponse(BaseModel):
     message: str = "success"
     status: str
-    trigger_id: str
-    trigger_type: TriggerType
+    task_id: str
+    task_type: TaskType | None = None
 
 
 class UploadResponse(BaseModel):

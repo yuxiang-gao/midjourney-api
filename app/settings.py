@@ -17,7 +17,13 @@ class Settings(BaseSettings):
     bot_token: str
     guild_id: int
     channel_id: int
+    application_id: int
+    endpoint_url: str = ""
 
+    prompt_id_prefix: str = "<#"
+    prompt_id_suffix: str = "#>"
+
+    mj_bot_id: int = 936929561302675456  # unique id of Midjourney Bot
     discord_base_url: str = "https://discord.com/api/v9"
 
     # task queue

@@ -11,7 +11,7 @@ class TriggerStatus(str, Enum):
     verify = "verify"  # 需人工验证
 
 
-class TriggerType(str, Enum):
+class TaskType(str, Enum):
     generate = "generate"
     upscale = "upscale"
     variation = "variation"
