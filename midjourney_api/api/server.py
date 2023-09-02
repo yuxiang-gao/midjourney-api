@@ -7,7 +7,16 @@ import midjourney_api.api.routes as routes
 from midjourney_api.settings import settings
 from midjourney_api.version import __version__
 
-app = FastAPI(title="Moderato", version=__version__, root_path=settings.fastapi_root_path, lifespan=routes.lifespan)
+app = FastAPI(title="Midjourney", version=__version__, root_path=settings.fastapi_root_path, lifespan=routes.lifespan)
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
