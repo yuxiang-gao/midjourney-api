@@ -5,8 +5,8 @@ from typing import Optional
 
 from pydantic import AnyHttpUrl, BaseModel
 
-from app.discord.enums import TaskType
-from app.settings import settings
+from midjourney_api.discord.enums import TaskType
+from midjourney_api.settings import settings
 
 
 # extract url and text

@@ -1,26 +1,26 @@
-FROM python:3.11-buster as builder
+# builder image
+# note only 2 files are needed for compiling the version lock
+FROM python:3.11-slim AS builder
 
 RUN pip install poetry==1.5.1
 
-ENV POETRY_NO_INTERACTION=1 \
-    POETRY_VIRTUALENVS_IN_PROJECT=1 \
-    POETRY_VIRTUALENVS_CREATE=1 \
-    POETRY_CACHE_DIR=/tmp/poetry_cache
+WORKDIR /build
+ADD pyproject.toml poetry.lock ./
+
+RUN poetry export -f requirements.txt -o requirements.txt
+
+# production image
+FROM python:3.11-alpine as runtime
+
+COPY --from=builder /build/requirements.txt .
+
+RUN set -eux; \
+    export PYTHONDONTWRITEBYTECODE=1; \
+    pip install \
+    --no-cache-dir \
+    --requirement requirements.txt; \
+    rm requirements.txt;
 
 WORKDIR /app
-
-COPY pyproject.toml poetry.lock ./
-
-RUN --mount=type=cache,target=$POETRY_CACHE_DIR poetry install --without dev --no-root
-
-FROM python:3.11-slim-buster as runtime
-
-ENV VIRTUAL_ENV=/app/.venv \
-    PATH="/app/.venv/bin:$PATH"
-
-COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
-
-COPY app ./app
-# COPY .env .env
-
-ENTRYPOINT ["python", "-m", "app.settings"]
+COPY pyproject.toml ./
+COPY midjourney_api ./midjourney_api

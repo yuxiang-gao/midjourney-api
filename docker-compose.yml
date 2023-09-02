@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+    redis:
+        image: redis:alpine
+        ports:
+            - "6379:6379"
+
+    worker:
+        build: .
+        command: python -m arq midjourney_api.tasks.worker.WorkerSettings
+        volumes:
+            - ./midjourney_api:/app/midjourney_api
+        env_file:
+            - .env
+        environment:
+            - REDIS_DSN=redis://redis:6379/0
+        depends_on:
+            - redis
+
+    fastapi:
+        build: .
+        command: python -m uvicorn midjourney_api.api.server:app --host 0.0.0.0 --port 8000
+        volumes:
+            - ./midjourney_api:/app/midjourney_api
+        ports:
+            - "8000:8000"
+        env_file:
+            - .env
+        depends_on:
+            - worker

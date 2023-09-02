@@ -7,9 +7,9 @@ from arq import Retry
 from arq.jobs import Job
 from loguru import logger
 
-from app.discord.bot import make_bot
-from app.discord.enums import TaskType
-from app.settings import settings
+from midjourney_api.discord.bot import make_bot
+from midjourney_api.discord.enums import TaskType
+from midjourney_api.settings import settings
 
 
 def make_payload(trigger_type: int, data: Dict[str, Any], **kwargs) -> Dict[str, Any]:

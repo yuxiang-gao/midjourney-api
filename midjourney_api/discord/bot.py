@@ -7,8 +7,8 @@ from discord import Client, Intents, Message
 from discord.ext import commands
 from loguru import logger
 
-from app.api.models import TaskId, TaskInfo, TaskStatus
-from app.settings import settings
+from midjourney_api.api.models import TaskId, TaskInfo, TaskStatus
+from midjourney_api.settings import settings
 
 
 class DiscordClient(Client):

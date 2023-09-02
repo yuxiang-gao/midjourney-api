@@ -10,10 +10,10 @@ from arq.jobs import Job, JobStatus
 from fastapi import APIRouter, Body, FastAPI, HTTPException, Query, Security, status
 from loguru import logger
 
-from app.api.models import TaskId, TaskInfo, TaskStatus
-from app.discord.enums import TaskType
-from app.settings import settings
-from app.tasks.worker import redis_settings
+from midjourney_api.api.models import TaskId, TaskInfo, TaskStatus
+from midjourney_api.discord.enums import TaskType
+from midjourney_api.settings import settings
+from midjourney_api.tasks.worker import redis_settings
 
 from .models import *
 

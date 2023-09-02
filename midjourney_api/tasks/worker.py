@@ -3,7 +3,7 @@ import asyncio
 from arq.connections import ArqRedis, RedisSettings, create_pool
 from loguru import logger
 
-from app.settings import settings
+from midjourney_api.settings import settings
 
 from .tasks import generate, get_msgs, shutdown, startup
 
